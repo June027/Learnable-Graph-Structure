@@ -1,0 +1,59 @@
+# configs/full_experiment.yaml
+
+project:
+  name: "NAT_Full_Experiment"
+  seed: 2026
+  device: "cuda"
+
+paths:
+  # Public placeholders. Point these to your local graph data before training.
+  graph_dir: "data/graphs"
+  label_file: "data/labels.csv"
+  output_dir: "outputs/full_experiment"
+
+data:
+  max_patches: 64
+  num_features: 167
+  num_classes: 1
+  num_workers: 0      # Windows 建议 0
+  check_files: true   # 自动清洗坏文件
+
+  # 🔥 数据增强配置
+  augmentation:
+    enabled: true           # 训练时是否开启增强
+    drop_node_prob: 0.05    # 随机丢弃 5% 的节点
+    noise_scale: 0.02       # 添加特征噪声
+
+model:
+  gnn_dim: 64
+  gnn_layers: 10
+  transformer_layers: 2
+  num_cell_types: 6
+  dropout: 0.1
+
+  # 🔥🔥🔥 核心实验开关 🔥🔥🔥
+
+  # 1. 注意力开关 (True = GAT/EGAT模式; False = GCN/Sum模式)
+  use_attention: true
+
+  # 2. 边权重开关 (True = 利用细胞间距离; False = 纯拓扑)
+  #    如果 use_attention=True 且 use_edge_weight=True -> EGAT
+  #    如果 use_attention=False 且 use_edge_weight=True -> Weighted GCN
+  use_edge_weight: true
+
+  # 3. 多头数量 (仅当 use_attention=True 时生效)
+  heads: 4
+
+train:
+  epochs: 200
+  batch_size: 1
+  lr: 2.0e-4
+  weight_decay: 1.0e-4
+  accum_steps: 16
+  clip_grad: 5.0
+  patience: 30
+  max_keep_ckpts: 5
+
+  # 🔥 4. 固定 GNN 开关 (True = 冻结 GNN 参数, 只训练 Transformer)
+  #    用于验证“图结构是否需要学习”
+  freeze_gnn: false
