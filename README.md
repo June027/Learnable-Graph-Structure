@@ -8,17 +8,11 @@
 
 工程的直接应用是数字病理，核心方法是可复用的空间图学习：把对象视为节点、空间邻接视为边、对象类别与视觉表征视为节点属性，再进行关系推理。这一表示方式可以迁移到机器人场景图、物体关系建模和语义地图中的目标推理。仓库不把现有医学实验包装成机器人导航实验。
 
-```mermaid
-flowchart LR
-    A[Patch / object features] --> B[Spatial graph construction]
-    C[Type and position attributes] --> B
-    B --> D[GAT / EGAT / weighted GCN]
-    D --> E[Attention pooling]
-    E --> F[2D positional encoding]
-    F --> G[Transformer aggregation]
-    G --> H[Patient-level prediction]
-    D --> I[Node, edge and spatial interpretation]
-```
+<p align="center">
+  <img src="assets/adaptive-gsl-workflow.png" alt="从 WSI 细胞分割、UNI 语义特征和空间先验，到自适应图结构学习、异构 GNN、Patch 级聚合、疗效预测与解释的完整流程" width="100%">
+</p>
+
+<p align="center"><sub>完整算法流程图来自作者提供的博士申请答辩材料。</sub></p>
 
 ## 主要功能
 
